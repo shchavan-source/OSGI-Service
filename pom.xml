@@ -36,7 +36,7 @@
     <camel.version>2.17.2</camel.version>
     <karaf.version>2.4.4</karaf.version>
     <karaf.plugin.version>4.0.3</karaf.plugin.version>
-    <fabric8.version>2.2.144</fabric8.version>
+    <fabric8.version>2.2.145</fabric8.version>
 
     <docker.from>fabric8/s2i-karaf:1.2</docker.from>
 
