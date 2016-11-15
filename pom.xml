@@ -31,16 +31,15 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
     <!-- configure the versions you want to use here -->
-    <camel.version>2.17.3</camel.version>
-    <karaf.version>2.4.4</karaf.version>
-    <karaf.plugin.version>4.0.7</karaf.plugin.version>
-    <fabric8.version>2.2.168</fabric8.version>
+    <camel.version>2.18.0</camel.version>
+    <karaf.version>4.0.7</karaf.version>
+    <fabric8.version>2.2.176</fabric8.version>
 
     <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
     <maven-surefire-plugin.version>2.18.1</maven-surefire-plugin.version>
     <maven-bundle-plugin.version>2.3.7</maven-bundle-plugin.version>
     <maven-install-plugin.version>2.5.2</maven-install-plugin.version>
-    <fabric8.maven.plugin.version>3.1.66</fabric8.maven.plugin.version>
+    <fabric8.maven.plugin.version>3.1.92</fabric8.maven.plugin.version>
   </properties>
 
   <dependencyManagement>
@@ -73,39 +72,35 @@
     </dependency>
 
     <!-- Karaf microcontainer dependencies -->
+     <dependency>
+      <groupId>org.apache.karaf.features</groupId>
+      <artifactId>framework</artifactId>
+      <version>${karaf.version}</version>
+      <type>kar</type>
+    </dependency>
     <dependency>
       <groupId>org.apache.karaf.features</groupId>
-      <artifactId>static</artifactId>
-      <version>${karaf.plugin.version}</version>
-      <type>kar</type>
+      <artifactId>framework</artifactId>
+      <classifier>features</classifier>
+      <version>${karaf.version}</version>
+      <type>xml</type>
       <scope>compile</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>*</groupId>
-          <artifactId>*</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
-      <groupId>org.apache.karaf.assemblies.features</groupId>
+      <groupId>org.apache.karaf.features</groupId>
       <artifactId>standard</artifactId>
-      <version>${karaf.version}</version>
       <classifier>features</classifier>
+      <version>${karaf.version}</version>
       <type>xml</type>
+      <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>org.apache.karaf.assemblies.features</groupId>
-      <artifactId>spring</artifactId>
-      <version>${karaf.version}</version>
-      <classifier>features</classifier>
-      <type>xml</type>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.karaf.assemblies.features</groupId>
+      <groupId>org.apache.karaf.features</groupId>
       <artifactId>enterprise</artifactId>
-      <version>${karaf.version}</version>
       <classifier>features</classifier>
+      <version>${karaf.version}</version>
       <type>xml</type>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.camel.karaf</groupId>
@@ -169,7 +164,7 @@
       <plugin>
         <groupId>org.apache.karaf.tooling</groupId>
         <artifactId>karaf-maven-plugin</artifactId>
-        <version>${karaf.plugin.version}</version>
+        <version>${karaf.version}</version>
         <extensions>true</extensions>
         <executions>
           <execution>
@@ -188,28 +183,27 @@
           </execution>
         </executions>
         <configuration>
-          <karafVersion>v24</karafVersion>
+          <javase>1.8</javase>
+          <karafVersion>v4x</karafVersion>
           <useReferenceUrls>true</useReferenceUrls>
           <archiveTarGz>false</archiveTarGz>
           <includeBuildOutputDirectory>false</includeBuildOutputDirectory>
           <startupFeatures>
-            <feature>karaf-framework</feature>
+            <feature>framework</feature>
             <feature>scr</feature>
             <feature>jaas</feature>
             <feature>aries-blueprint</feature>
             <feature>camel-blueprint</feature>
             <feature>fabric8-karaf-blueprint</feature>
+            <feature>fabric8-karaf-checks</feature>
           </startupFeatures>
           <startupBundles>
             <bundle>mvn:${project.groupId}/${project.artifactId}/${project.version};start-level=80</bundle>
           </startupBundles>
-          <blacklistedFeatures>
-            <!--
-                 blacklist karaf 4 static feature which includes pax-logging
-                 and staticcm to avoid interferences with karaf v2.4
-            -->
-            <feature>static</feature>
-          </blacklistedFeatures>
+          <blacklistedBundles>
+            <bundle>camel-karaf-commands;url="mvn:org.apache.camel.karaf/camel-karaf-commands/${camel.version}"</bundle>
+            <bundle>camel-karaf-commands-catalog;url="mvn:org.apache.camel.karaf/camel-karaf-commands-catalog/${camel.version}"</bundle>
+          </blacklistedBundles>
           <libraries>
             <library>
               mvn:org.apache.karaf.jaas/org.apache.karaf.jaas.boot/${karaf.version};type:=boot;export:=true;delegate:=true
