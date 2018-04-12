@@ -37,7 +37,7 @@
     <camelContext id="log-example-context" xmlns="http://camel.apache.org/schema/blueprint" >
 
         <!--
-          A very simple Camel route, that uses a timer to trigger a message every 1 second.
+          A very simple Camel route, that uses a timer to trigger a message every second.
 
           The <setBody> sets a body into the Camel Message.
 
@@ -45,11 +45,11 @@
           route is doing.
         -->
         <route id="log-route">
-          <from uri="timer:foo?period=1s"/>
-            <setBody>
+          <from id="message-timer" uri="timer:foo?period=1s"/>
+            <setBody id="set-message">
                 <simple>Hello from Camel!</simple>
             </setBody>
-            <log message=">>> ${body} : ${id}"/>
+            <log id="log-message" message=">>> ${body} : ${id}"/>
         </route>
     </camelContext>
 
