@@ -3,6 +3,14 @@ spec:
   template:
     spec:
       containers:
-        - env:
-          - name: QUICKSTART_NAME
-            value: karaf-camel-log
+        -
+          resources:
+            requests:
+              cpu: "0.2"
+              memory: 128Mi
+            limits:
+              cpu: "1.0"
+              memory: 512Mi
+          env:
+            - name: QUICKSTART_NAME
+              value: karaf-camel-log
