@@ -1,0 +1,108 @@
+= Karaf Camel Log QuickStart
+
+This quickstart shows a simple Apache Camel application that logs a message to the server log every second.
+
+This example is implemented using solely the XML DSL (there is no Java code). The source code is provided in the following XML file `src/main/resources/OSGI-INF/blueprint/camel-log.xml`.
+It also shows how Karaf assembly files can be overridden using resources from `src/main/resources/assembly/`. The included sample log file `etc/org.ops4j.pax.logging.cfg` sets the log level to DEBUG.
+
+IMPORTANT: This quickstart can run in 1 mode: on Kubernetes / OpenShift Cluster
+
+== Running the Quickstart on a single-node Kubernetes/OpenShift cluster
+
+IMPORTANT: You need to run this example on Container Development Kit 3.3 or OpenShift 3.7.
+Both of these products have suitable Fuse images pre-installed.
+If you run it in an environment where those images are not preinstalled follow the steps described in <<single-node-without-preinstalled-images>>.
+
+A single-node Kubernetes/OpenShift cluster provides you with access to a cloud environment that is similar to a production environment.
+
+If you have a single-node Kubernetes/OpenShift cluster, such as Minishift or the Red Hat Container Development Kit, link:http://appdev.openshift.io/docs/minishift-installation.html[installed and running], you can deploy your quickstart there.
+
+To deploy this quickstart to a running single-node OpenShift cluster:
+
+. Download the project and extract the archive on your local filesystem.
+
+. Log in to your OpenShift cluster:
++
+[source,bash,options="nowrap",subs="attributes+"]
+----
+$ oc login -u developer -p developer
+----
+
+. Create a new OpenShift project for the quickstart:
++
+[source,bash,options="nowrap",subs="attributes+"]
+----
+$ oc new-project MY_PROJECT_NAME
+----
+
+. Change the directory to the folder that contains the extracted quickstart application (for example, `my_openshift/karaf-camel-log`) :
++
+[source,bash,options="nowrap",subs="attributes+"]
+----
+$ cd my_openshift/karaf-camel-log
+----
+
+. Build and deploy the project to the OpenShift cluster:
++
+[source,bash,options="nowrap",subs="attributes+"]
+----
+$ mvn clean -DskipTests fabric8:deploy -Popenshift
+----
+
+. List all the running pods:
++
+[source,bash,options="nowrap",subs="attributes+"]
+----
+$ oc get pods
+----
+
+. Find the name of the pod that runs this quickstart. Output the logs from the running pods and see the messages sent by Camel:
++
+[source,bash,options="nowrap",subs="attributes+"]
+----
+$ oc logs <name of pod>
+----
+
+[#single-node-without-preinstalled-images]
+=== Running the Quickstart on a single-node Kubernetes/OpenShift cluster without preinstalled images
+
+A single-node Kubernetes/OpenShift cluster provides you with access to a cloud environment that is similar to a production environment.
+
+If you have a single-node Kubernetes/OpenShift cluster, such as Minishift or the Red Hat Container Development Kit, link:http://appdev.openshift.io/docs/minishift-installation.html[installed and running], you can deploy your quickstart there.
+
+. Log in to your OpenShift cluster:
++
+[source,bash,options="nowrap",subs="attributes+"]
+----
+$ oc login -u developer -p developer
+----
+
+. Create a new OpenShift project for the quickstart:
++
+[source,bash,options="nowrap",subs="attributes+"]
+----
+$ oc new-project MY_PROJECT_NAME
+----
+
+. Import base images in your newly created project (MY_PROJECT_NAME) according to https://access.redhat.com/documentation/en-us/red_hat_fuse/7.4/html/fuse_on_openshift_guide/get-started-non-admin[documentation].
+
+. Change the directory to the folder that contains the extracted quickstart application (for example, `my_openshift/karaf-camel-log`) :
++
+[source,bash,options="nowrap",subs="attributes+"]
+----
+$ cd my_openshift/karaf-camel-log
+----
+
+. Build and deploy the project to the OpenShift cluster:
++
+[source,bash,options="nowrap",subs="attributes+"]
+----
+$ mvn clean -DskipTests fabric8:deploy -Popenshift -Dfabric8.generator.fromMode=istag -Dfabric8.generator.from=MY_PROJECT_NAME/fuse7-karaf-openshift:1.4
+----
+
+. In your browser, navigate to the `MY_PROJECT_NAME` project in the OpenShift console.
+Wait until you can see that the pod for the `karaf-camel-log` has started up.
+
+. On the project's `Overview` page, navigate to the details page deployment of the `karaf-camel-log` application: `https://OPENSHIFT_IP_ADDR:8443/console/project/MY_PROJECT_NAME/browse/pods/karaf-camel-log-NUMBER_OF_DEPLOYMENT?tab=details`.
+
+. Switch to tab `Logs` and then see the messages sent by Camel.
