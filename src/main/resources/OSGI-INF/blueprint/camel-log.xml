@@ -47,7 +47,8 @@
         <route id="log-route">
           <from id="message-timer" uri="timer:foo?period=1s"/>
             <setBody id="set-message">
-                <simple>Hello from Camel!</simple>
+                <!--simple>Hello from Camel!</simple-->
+                <method ref="org.fusesource.example.HelloWorldService" method="printHelloWorld"/>
             </setBody>
             <log id="log-message" message=">>> ${body} : ${id}"/>
         </route>
